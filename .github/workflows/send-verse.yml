@@ -1,0 +1,29 @@
+name: Send Verse of the Day
+
+on:
+  schedule:
+    # Every day at 8:00 AM Mountain Time (UTC-6)
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+
+jobs:
+  send-verse:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+      
+      - name: Send verse to GroupMe
+        run: python main.py
+        env:
+          GROUPME_BOT_ID: ${{ secrets.GROUPME_BOT_ID }}
